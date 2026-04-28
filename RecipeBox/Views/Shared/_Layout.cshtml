@@ -1,0 +1,411 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RecipeBox</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+            min-height: 100vh;
+        }
+
+        /* Навігаційна панель */
+        .navbar {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 50%, #ffb347 100%) !important;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
+            border-bottom: 3px solid #ffd89b;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.8rem !important;
+            color: #fff !important;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            padding: 8px 16px !important;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .dropdown-menu {
+            background: #fff9f5;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .dropdown-item {
+            color: #ff6b6b;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .dropdown-item:hover {
+            background: linear-gradient(90deg, #ff6b6b 0%, #ff8e53 100%);
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        /* Кнопки */
+        .btn-outline-primary {
+            border: 2px solid #fff !important;
+            color: #fff !important;
+            border-radius: 25px;
+            padding: 5px 20px !important;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: #fff !important;
+            color: #ff6b6b !important;
+            transform: scale(1.05);
+        }
+
+        .btn-outline-danger {
+            border: 2px solid #fff !important;
+            color: #fff !important;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            background: #fff !important;
+            color: #ff4444 !important;
+            transform: scale(1.05);
+        }
+
+        /* Картки */
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 107, 107, 0.2);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%) !important;
+            color: #fff !important;
+        }
+
+        .card-title {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 8px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            background: linear-gradient(135deg, #ff8e53 0%, #ffb347 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #ffb347 0%, #ffcc33 100%);
+            border: none;
+            border-radius: 25px;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 180, 71, 0.4);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #ffb347 0%, #ff8e53 100%);
+            border: none;
+            color: #fff;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffcc33 0%, #ffb347 100%);
+            border: none;
+        }
+
+        /* Футер */
+        footer {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 50%, #ffb347 100%);
+            color: #fff;
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '🍪 🍩 🎂 🍰 🧁';
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            font-size: 40px;
+            opacity: 0.1;
+            white-space: nowrap;
+            animation: slide 20s linear infinite;
+        }
+
+        keyframes slide {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+
+        footer a {
+            color: #ffd89b;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+
+        /* Баджи */
+        .badge {
+            border-radius: 20px;
+            padding: 5px 12px;
+        }
+
+        .bg-secondary {
+            background: linear-gradient(135deg, #ffb347 0%, #ff8e53 100%) !important;
+        }
+
+        .bg-info {
+            background: linear-gradient(135deg, #ff8e53 0%, #ff6b6b 100%) !important;
+        }
+
+        .bg-success {
+            background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%) !important;
+        }
+
+        .bg-warning {
+            background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%) !important;
+        }
+
+        .bg-danger {
+            background: linear-gradient(135deg, #f44336 0%, #ff5722 100%) !important;
+        }
+
+        /* Анімації */
+        keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Форми */
+        .form-control, .form-select {
+            border: 2px solid #ffe0cc;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #ff8e53;
+            box-shadow: 0 0 0 0.2rem rgba(255, 142, 83, 0.25);
+        }
+
+        /* Алерти */
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: none;
+            border-radius: 15px;
+            color: #155724;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+            border: none;
+            border-radius: 15px;
+            color: #ff6b6b;
+        }
+
+        /* Таблиці */
+        .table {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: #fff;
+        }
+
+        .table tbody tr:hover {
+            background: #fff5f0;
+        }
+
+        /* Скролл бар */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #ffe0cc;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ff8e53 0%, #ffb347 100%);
+        }
+
+        /* Хлібні крихти */
+        .breadcrumb {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 25px;
+            padding: 10px 20px;
+        }
+
+        .breadcrumb-item a {
+            color: #ff6b6b;
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: #ffb347;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">🍳 RecipeBox</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">Головна</a>
+                </li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Recipes" asp-action="MyRecipes">Мої рецепти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Recipes" asp-action="Create">Додати рецепт</a>
+                    </li>
+                    @if (User.IsInRole("moderator"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-warning" asp-controller="Moderation" asp-action="Index">
+                                🛡️ Модерація
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+            <ul class="navbar-nav">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            👤 @User.Identity.Name
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" asp-controller="Recipes" asp-action="MyRecipes">Мої рецепти</a></li>
+                            <li><a class="dropdown-item" asp-controller="Recipes" asp-action="Create">Додати рецепт</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout">Вийти</a></li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-primary btn-sm" asp-controller="Account" asp-action="Login">
+                            Увійти
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    @RenderBody()
+</main>
+
+<footer class="border-top">
+    <div class="container">
+        <div class="text-center text-muted">
+            <small>© 2026 RecipeBox - Ділися своїми кулінарними шедеврами!</small>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.13/dist/jquery.validate.unobtrusive.min.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+@if (User.Identity.IsAuthenticated)
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+            👤 @User.Identity.Name
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" asp-controller="Recipes" asp-action="MyRecipes">Мої рецепти</a></li>
+            <li><a class="dropdown-item" asp-controller="Recipes" asp-action="Create">Додати рецепт</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout">
+                    🚪 Вийти
+                </a>
+            </li>
+        </ul>
+    </li>
+}

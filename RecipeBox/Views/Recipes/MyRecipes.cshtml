@@ -1,0 +1,76 @@
+@model List<RecipeBox.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Мої рецепти";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📖 Мої рецепти</h2>
+        <a asp-action="Create" class="btn btn-success">+ Додати рецепт</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <h4>У вас ще немає рецептів</h4>
+            <p>Поділіться своїм улюбленим рецептом!</p>
+            <a asp-action="Create" class="btn btn-primary">Додати перший рецепт</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Назва</th>
+                        <th>Категорія</th>
+                        <th>Час</th>
+                        <th>Статус</th>
+                        <th>Дата створення</th>
+                        <th>Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var recipe in Model)
+                    {
+                        <tr>
+                            <td>@recipe.Title</td>
+                            <td>@recipe.Category</td>
+                            <td>@recipe.CookingTime</td>
+                            <td>
+                                @if (recipe.Status == "Опубліковано")
+                                {
+                                    <span class="badge bg-success">Опубліковано</span>
+                                }
+                                else if (recipe.Status == "На перевірці")
+                                {
+                                    <span class="badge bg-warning text-dark">На перевірці</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Відхилено</span>
+                                }
+                            </td>
+                            <td>@recipe.CreatedAt.ToString("dd.MM.yyyy")</td>
+                            <td>
+                                <a asp-controller="Home" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-sm btn-info">
+                                    Переглянути
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

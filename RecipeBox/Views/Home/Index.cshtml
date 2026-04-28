@@ -1,0 +1,53 @@
+﻿@model List<RecipeBox.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Головна - Рецепти";
+}
+
+<div class="container mt-4">
+    <div class="text-center mb-5">
+        <h1 class="display-4">🍳 RecipeBox</h1>
+        <p class="lead">Найкращі рецепти від нашої спільноти</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <h4>Поки що немає опублікованих рецептів</h4>
+            <p>Станьте першим, хто поділиться своїм рецептом!</p>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Recipes" asp-action="Create" class="btn btn-primary">Додати рецепт</a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var recipe in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@recipe.Title</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <span class="badge bg-secondary">@recipe.Category</span>
+                                <span class="badge bg-info">⏱️ @recipe.CookingTime</span>
+                            </h6>
+                            <p class="card-text">
+                                <strong>Автор:</strong> @recipe.AuthorName<br>
+                                <strong>Опубліковано:</strong> @recipe.CreatedAt.ToString("dd.MM.yyyy")
+                            </p>
+                            <p class="card-text text-truncate">@recipe.Instruction</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a asp-action="Details" asp-controller="Home" asp-route-id="@recipe.Id" class="btn btn-outline-primary w-100">
+                                Детальніше
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,75 @@
+@model RecipeBox.ViewModels.RecipeViewModel
+
+@{
+    ViewData["Title"] = "Редагувати рецепт";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="mb-0">✏️ Редагувати рецепт</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-bold">Назва рецепту *</label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Category" class="form-label fw-bold">Категорія *</label>
+                                <select asp-for="Category" class="form-select">
+                                    <option value="Супи">🍲 Супи</option>
+                                    <option value="Основні страви">🍖 Основні страви</option>
+                                    <option value="Салати">🥗 Салати</option>
+                                    <option value="Десерти">🍰 Десерти</option>
+                                    <option value="Напої">🥤 Напої</option>
+                                    <option value="Випічка">🥖 Випічка</option>
+                                </select>
+                                <span asp-validation-for="Category" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="CookingTime" class="form-label fw-bold">Час приготування *</label>
+                                <input asp-for="CookingTime" class="form-control" />
+                                <span asp-validation-for="CookingTime" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Ingredients" class="form-label fw-bold">Інгредієнти *</label>
+                            <textarea asp-for="Ingredients" class="form-control" rows="5"></textarea>
+                            <span asp-validation-for="Ingredients" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Instruction" class="form-label fw-bold">Інструкція приготування *</label>
+                            <textarea asp-for="Instruction" class="form-control" rows="8"></textarea>
+                            <span asp-validation-for="Instruction" class="text-danger"></span>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <strong>⚠️ Увага!</strong> Після редагування рецепт буде знову відправлено на модерацію.
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                💾 Зберегти зміни
+                            </button>
+                            <a asp-action="MyRecipes" class="btn btn-secondary">
+                                ← Назад до моїх рецептів
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

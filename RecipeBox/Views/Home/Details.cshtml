@@ -1,0 +1,137 @@
+@model RecipeBox.Models.Recipe
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Головна</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+        </ol>
+    </nav>
+
+    @if (Model.Status != "Опубліковано" && !User.IsInRole("moderator") && User.FindFirstValue(ClaimTypes.NameIdentifier) != Model.AuthorId)
+    {
+        <div class="alert alert-warning">
+            <h5>⚠️ Рецепт на модерації</h5>
+            <p>Цей рецепт ще не опубліковано. Він доступний тільки автору та модераторам.</p>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title mb-0">@Model.Title</h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="badge bg-secondary">@Model.Category</span>
+                        <span class="badge bg-info">⏱️ @Model.CookingTime</span>
+                        @if (Model.Status == "Опубліковано")
+                        {
+                            <span class="badge bg-success">✅ Опубліковано</span>
+                        }
+                        else if (Model.Status == "На перевірці")
+                        {
+                            <span class="badge bg-warning text-dark">⏳ На перевірці</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">❌ Відхилено</span>
+                        }
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>👨‍🍳 Інформація про автора</h4>
+                        <p><strong>Автор:</strong> @Model.AuthorName</p>
+                        <p><strong>Дата створення:</strong> @Model.CreatedAt.ToString("dd MMMM yyyy, HH:mm")</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>🥗 Інгредієнти</h4>
+                        <div class="p-3 bg-light rounded">
+                            @{
+                                var ingredients = Model.Ingredients.Split(new[] { '\n', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            }
+                            <ul class="mb-0">
+                                @foreach (var ingredient in ingredients)
+                                {
+                                    <li>@ingredient.Trim()</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>📝 Інструкція приготування</h4>
+                        <div class="p-3 bg-light rounded">
+                            @{
+                                var instructions = Model.Instruction.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                            }
+                            <ol class="mb-0">
+                                @foreach (var step in instructions)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(step))
+                                    {
+                                        <li>@step.Trim().</li>
+                                    }
+                                }
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+                        ← Назад до списку
+                    </a>
+                    
+                    @if (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.AuthorId)
+                    {
+                        <a asp-controller="Recipes" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                            ✏️ Редагувати
+                        </a>
+                    }
+                    
+                    @if (User.IsInRole("moderator"))
+                    {
+                        <a asp-controller="Moderation" asp-action="Index" class="btn btn-info">
+                            🛡️ До модерації
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">ℹ️ Швидка інформація</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Категорія:</strong> @Model.Category</p>
+                    <p><strong>Час приготування:</strong> @Model.CookingTime</p>
+                    <p><strong>Автор:</strong> @Model.AuthorName</p>
+                    <p><strong>Статус:</strong> 
+                        @if (Model.Status == "Опубліковано")
+                        {
+                            <span class="text-success">Доступний для всіх</span>
+                        }
+                        else if (Model.Status == "На перевірці")
+                        {
+                            <span class="text-warning">Очікує модерації</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Відхилено модератором</span>
+                        }
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using System.Security.Claims

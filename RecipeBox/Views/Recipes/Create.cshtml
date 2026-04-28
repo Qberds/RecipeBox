@@ -1,0 +1,83 @@
+@model RecipeBox.ViewModels.RecipeViewModel
+
+@{
+    ViewData["Title"] = "Додати рецепт";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">✏️ Додати новий рецепт</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-bold">Назва рецепту *</label>
+                            <input asp-for="Title" class="form-control" placeholder="Наприклад: Борщ український" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Category" class="form-label fw-bold">Категорія *</label>
+                                <select asp-for="Category" class="form-select">
+                                    <option value="">Виберіть категорію</option>
+                                    <option value="Супи">🍲 Супи</option>
+                                    <option value="Основні страви">🍖 Основні страви</option>
+                                    <option value="Салати">🥗 Салати</option>
+                                    <option value="Десерти">🍰 Десерти</option>
+                                    <option value="Напої">🥤 Напої</option>
+                                    <option value="Випічка">🥖 Випічка</option>
+                                </select>
+                                <span asp-validation-for="Category" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="CookingTime" class="form-label fw-bold">Час приготування *</label>
+                                <input asp-for="CookingTime" class="form-control" placeholder="Наприклад: 1 година" />
+                                <span asp-validation-for="CookingTime" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Ingredients" class="form-label fw-bold">Інгредієнти *</label>
+                            <textarea asp-for="Ingredients" class="form-control" rows="5" 
+                                      placeholder="Список інгредієнтів (кожен з нового рядка)"></textarea>
+                            <small class="text-muted">Перерахуйте всі інгредієнти, кожен з нового рядка</small>
+                            <span asp-validation-for="Ingredients" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Instruction" class="form-label fw-bold">Інструкція приготування *</label>
+                            <textarea asp-for="Instruction" class="form-control" rows="8" 
+                                      placeholder="Опишіть процес приготування крок за кроком..."></textarea>
+                            <small class="text-muted">Детально опишіть кожен крок приготування</small>
+                            <span asp-validation-for="Instruction" class="text-danger"></span>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> Після відправки рецепт буде відправлено на модерацію.
+                            Після перевірки модератором він стане доступним для всіх користувачів.
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                📤 Відправити на модерацію
+                            </button>
+                            <a asp-action="MyRecipes" class="btn btn-secondary">
+                                ← Назад до моїх рецептів
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

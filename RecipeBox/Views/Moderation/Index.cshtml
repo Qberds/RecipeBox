@@ -1,0 +1,71 @@
+@model List<RecipeBox.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Модерація рецептів";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">🛡️ Модерація рецептів</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <h4>Немає рецептів на модерацію</h4>
+            <p>Всі рецепти перевірені</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var recipe in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card @(recipe.Status == "Відхилено" ? "border-danger" : "border-warning") h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0">@recipe.Title</h5>
+                            <small class="text-muted">Автор: @recipe.AuthorName | @recipe.CreatedAt.ToString("dd.MM.yyyy")</small>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Категорія:</strong> @recipe.Category</p>
+                            <p><strong>Час приготування:</strong> @recipe.CookingTime</p>
+                            <p><strong>Інгредієнти:</strong></p>
+                            <p class="text-muted small">@recipe.Ingredients</p>
+                            <p><strong>Інструкція:</strong></p>
+                            <p class="text-muted small">@recipe.Instruction</p>
+                            <div class="alert alert-secondary mt-2">
+                                <strong>Поточний статус:</strong> 
+                                @if (recipe.Status == "На перевірці")
+                                {
+                                    <span class="badge bg-warning text-dark">⏳ На перевірці</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">❌ Відхилено</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <form asp-action="ChangeStatus" method="post" class="d-flex gap-2">
+                                <input type="hidden" name="Id" value="@recipe.Id" />
+                                <select name="Status" class="form-select w-auto">
+                                    <option value="Опубліковано">✅ Опублікувати</option>
+                                    <option value="Відхилено">❌ Відхилити</option>
+                                    <option value="На перевірці">⏳ Залишити на перевірці</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary">Змінити статус</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
